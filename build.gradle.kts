@@ -49,7 +49,7 @@ tasks {
             freeCompilerArgs = listOf(
                 "-Xjsr305=strict"
             )
-            jvmTarget = "17"
+            jvmTarget = "16"
         }
     }
 

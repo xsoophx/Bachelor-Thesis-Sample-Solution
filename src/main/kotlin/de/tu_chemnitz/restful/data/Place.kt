@@ -25,8 +25,10 @@ data class PlaceEntity(
     @Id val name: String,
     val location: Location,
     val partners: Map<String, Distance>,
-)
+) {
+    fun toDto() = PlaceDto(partners = partners)
+}
 
 data class PlaceDto(
-    val partners: Set<PlaceDto>
+    val partners: Map<String, Distance>
 )
