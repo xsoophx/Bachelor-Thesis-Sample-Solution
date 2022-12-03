@@ -23,15 +23,34 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
 
     @Test
     fun `should add place to database`() {
-        val place = Place(
+        placeService.createMany(listOf(place))
+        assertEquals(expected = place, actual = placeService[place.name])
+    }
+
+    @Test
+    fun `should delete place from partner list`() {
+        placeService.createMany(listOf(place))
+        placeService.deleteById(BRAUNSCHWEIG)
+
+        val expected = Place(
             name = "Berlin",
             location = Location(longitude = 13.404954, latitude = 52.520008),
             partners = mapOf(
-                "Braunschweig" to 191.0,
                 "Frankfurt" to 419.0
             )
         )
-        placeService.createMany(listOf(place))
-        assertEquals(expected = place.toEntity(), actual = placeService[place.name].get())
+        assertEquals(expected = expected, actual = placeService[place.name])
+    }
+
+    companion object {
+        private const val BRAUNSCHWEIG = "Braunschweig"
+        private val place = Place(
+            name = "Berlin",
+            location = Location(longitude = 13.404954, latitude = 52.520008),
+            partners = mapOf(
+                BRAUNSCHWEIG to 191.0,
+                "Frankfurt" to 419.0
+            )
+        )
     }
 }

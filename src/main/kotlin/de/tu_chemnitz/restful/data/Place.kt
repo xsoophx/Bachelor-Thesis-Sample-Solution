@@ -19,6 +19,11 @@ data class Place(
         location = location,
         partners = partners
     )
+
+    companion object {
+        fun fromEntity(placeEntity: PlaceEntity) =
+            Place(name = placeEntity.name, location = placeEntity.location, partners = placeEntity.partners)
+    }
 }
 
 data class PlaceEntity(
@@ -26,9 +31,16 @@ data class PlaceEntity(
     val location: Location,
     val partners: Map<String, Distance>,
 ) {
-    fun toDto() = PlaceDto(partners = partners)
+    fun toResponse() = PlaceResponse(partners = partners)
 }
 
-data class PlaceDto(
+data class PlaceResponse(
     val partners: Map<String, Distance>
-)
+) {
+    companion object {
+        fun fromPlace(place: Place) =
+            PlaceResponse(partners = place.partners)
+
+        fun fromEntity(placeEntity: PlaceEntity) = PlaceResponse(partners = placeEntity.partners)
+    }
+}
