@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service
 @Service
 class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) {
 
-    operator fun get(name: String): Place? = placeRepository.findById(name).orElse(null)?.let { Place.fromEntity(it) }
+    operator fun get(name: String): Place? = placeRepository.findById(name).orElse(null)?.let {
+        Place.fromEntity(it)
+    }
 
     fun createMany(places: List<Place>): Iterable<PlaceEntity> = placeRepository.saveAll(places.map { place ->
         place.createPartners()
@@ -30,7 +32,7 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
         } else false
     }
 
-    private fun findAllByPartners(name: String) = placeRepository.findAllByPartner(name)
+    private fun findAllByPartners(name: String) = placeRepository.findByPartnersExists(name)
 
     private fun save(place: Place) = placeRepository.save(place.toEntity())
 

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("places")
 class PlaceController @Autowired constructor(val placeService: PlaceService) {
-    //TODO: add response entities
 
     @GetMapping("/{name}", produces = ["application/json"])
     @ResponseBody

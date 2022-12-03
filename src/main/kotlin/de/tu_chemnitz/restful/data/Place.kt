@@ -38,9 +38,7 @@ data class PlaceResponse(
     val partners: Map<String, Distance>
 ) {
     companion object {
-        fun fromPlace(place: Place) =
-            PlaceResponse(partners = place.partners)
-
+        fun fromPlace(place: Place) = PlaceResponse(partners = place.partners)
         fun fromEntity(placeEntity: PlaceEntity) = PlaceResponse(partners = placeEntity.partners)
     }
 }

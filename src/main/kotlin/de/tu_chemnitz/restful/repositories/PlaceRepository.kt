@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface PlaceRepository : CrudRepository<PlaceEntity, String> {
 
-    @Query("{'partners': {'first': ?0}}")
-    fun findAllByPartner(name: String): List<PlaceEntity>
+    @Query("{'partners.?0': { \$exists : true }}")
+    fun findByPartnersExists(name: String): List<PlaceEntity>
 }
