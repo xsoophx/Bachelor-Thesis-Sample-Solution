@@ -7,6 +7,7 @@ import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceEntity
 import de.tu_chemnitz.restful.repositories.PlaceRepository
+import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -72,20 +73,24 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
         )
     )
 
-    // very ugly, needs a lot of refactoring
     private fun aStar(start: String, destination: String, heuristics: Map<Place, Distance>): Path {
         val simplifiedHeuristics = heuristics.map { it.key.name to it.value }.toMap()
-        var open = listOf(Node(name = start, f = 0.0, g = 0.0, h = 0.0, parent = null))
-        var closed = listOf<Node>()
+        val open = PriorityQueue<Node>(compareBy { it.f }).also {
+            it.add(Node(name = start, f = 0.0, g = 0.0, h = 0.0, parent = null))
+        }
+        val closed = mutableSetOf<Node>()
 
         while (open.isNotEmpty()) {
-            val currentNode = open.minBy { it.g + it.h }
+            val currentNode = open.poll()
             if (currentNode.name == destination) {
-                closed = closed + currentNode
+                closed += currentNode
                 break
             }
 
-            val newNodes = heuristics.keys.find { it.name == currentNode.name }!!.partners.map { (place, distance) ->
+            val heuristic = checkNotNull(heuristics.keys.find { it.name == currentNode.name }) {
+                "There should be a heuristic for ${currentNode.name}"
+            }
+            val newNodes = heuristic.partners.map { (place, distance) ->
                 val h = simplifiedHeuristics.getValue(place)
                 Node(
                     name = place,
@@ -96,22 +101,19 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
                 )
             }
 
-            open = open - currentNode + newNodes
-            closed = closed + currentNode
+            newNodes.forEach(open::add)
+            closed += currentNode
         }
 
-        val path = getResultPath(closed)
+        val path = getResultPath(closed, destination)
         return Path(placesVisited = path.first, distance = path.second)
     }
 
-    private fun getResultPath(closed: List<Node>): Pair<List<String>, Distance> {
-        val path = mutableListOf<Node>()
-        var currentNode: Node? = closed.last()
+    private fun getResultPath(closed: Set<Node>, destination: String): Pair<List<String>, Distance> {
+        val path = generateSequence(closed.first { it.name == destination }) { it.parent }
+            .toList()
+            .asReversed()
 
-        while (currentNode != null) {
-            path.add(0, currentNode)
-            currentNode = currentNode.parent
-        }
         return path.map { it.name } to path.sumOf { it.g }
     }
 }

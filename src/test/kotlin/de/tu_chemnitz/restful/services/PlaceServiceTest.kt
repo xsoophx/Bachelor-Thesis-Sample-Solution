@@ -29,7 +29,7 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
     @ParameterizedTest
     @ArgumentsSource(PlaceProvider::class)
-    fun `aStart should work correctly`(places: Set<Place>) {
+    fun `aStar should work correctly`(places: Set<Place>) {
         placeService.createMany(places.toList())
         val heuristics = mapOf(
             SAARBRUECKEN to 222.0,
