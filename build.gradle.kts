@@ -18,6 +18,8 @@ object Version {
     const val JACKSON = "2.14.1"
     const val JUNIT = "5.9.1"
     const val KMONGO = "4.8.0"
+    const val MOCKK = "1.13.3"
+    const val SPRING_MOCKK = "3.1.2"
 }
 
 dependencies {
@@ -37,7 +39,12 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module = "mockito-core")
+    }
+
+    testImplementation("io.mockk:mockk:${Version.MOCKK}")
+    testImplementation("com.ninja-squad:springmockk:${Version.SPRING_MOCKK}")
 }
 tasks {
     "wrapper"(Wrapper::class) {

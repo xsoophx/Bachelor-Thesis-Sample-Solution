@@ -1,5 +1,7 @@
 package de.tu_chemnitz.restful.controllers
 
+import de.tu_chemnitz.restful.data.Distance
+import de.tu_chemnitz.restful.data.PathResponse
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceResponse
 import de.tu_chemnitz.restful.services.PlaceService
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
@@ -33,6 +36,18 @@ class PlaceController @Autowired constructor(val placeService: PlaceService) {
     fun createPlaces(@RequestBody places: List<Place>): ResponseEntity<List<PlaceResponse>> {
         val entity = placeService.createMany(places)
         return ResponseEntity.ok().body(entity.map { PlaceResponse.fromEntity(it) })
+    }
+
+    @PostMapping("/distance", produces = ["application/json"])
+    @ResponseBody
+    fun getDistance(
+        @RequestParam("start") start: String,
+        @RequestParam("destination") destination: String,
+        @RequestBody heuristics: Map<String, Distance>
+    ): ResponseEntity<PathResponse> {
+        val entity = placeService.getShortestDistance(start, destination, heuristics)
+        return entity?.let { ResponseEntity.ok(PathResponse.fromPath(entity)) }
+            ?: ResponseEntity.badRequest().build()
     }
 
     @DeleteMapping("/{name}")

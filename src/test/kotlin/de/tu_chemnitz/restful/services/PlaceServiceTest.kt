@@ -1,12 +1,11 @@
 package de.tu_chemnitz.restful.services
 
 import de.tu_chemnitz.restful.data.Location
+import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import java.util.stream.Stream
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -21,61 +20,60 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
-class PlaceServiceIntegrationTest @Autowired constructor(val placeService: PlaceService) {
+class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
     @BeforeEach
     fun cleanUp() {
         placeService.deleteAll()
     }
 
-    @Test
-    fun `should add place to database`() {
-        placeService.createMany(berlin)
-        assertEquals(expected = berlin, actual = placeService[berlin.name])
-    }
-
     @ParameterizedTest
     @ArgumentsSource(PlaceProvider::class)
-    fun `should delete place from partner list`(places: Set<Place>) {
-        val toBeRemoved = Place(
-            name = "Umpalumpadorf",
-            location = Location(longitude = 12.916667, latitude = 50.833332),
-            partners = mapOf(FRANKFURT to 1.0, BERLIN to 1.0, BRAUNSCHWEIG to 1.0)
+    fun `aStart should work correctly`(places: Set<Place>) {
+        placeService.createMany(places.toList())
+        val heuristics = mapOf(
+            SAARBRUECKEN to 222.0,
+            KAISERSLAUTERN to 158.0,
+            KARLSRUHE to 140.0,
+            LUDWIGSHAFEN to 108.0,
+            FRANKFURT to 96.0
         )
 
-        placeService.createMany(places.addPartner(toBeRemoved.name) + toBeRemoved)
-        placeService.deleteById(toBeRemoved.name)
+        val actual = placeService.getShortestDistance(
+            start = saarbruecken.name,
+            destination = frankfurt.name,
+            heuristics = heuristics
+        )
 
-        assertNull(placeService[toBeRemoved.name])
-        places.forEach { place ->
-            assertEquals(expected = place, actual = placeService[place.name])
-        }
-    }
-
-    private fun Set<Place>.addPartner(name: String, distance: Double = 1.0) = this.map { place ->
-        place.copy(partners = place.partners + (name to distance))
+        assertEquals(
+            expected = Path(listOf(SAARBRUECKEN, KAISERSLAUTERN, FRANKFURT), distance = 173.0),
+            actual = actual
+        )
     }
 
     companion object PlaceProvider : ArgumentsProvider {
-        private const val BRAUNSCHWEIG = "Braunschweig"
-        private const val BERLIN = "Berlin"
+        private const val KAISERSLAUTERN = "Kaiserslautern"
+        private const val SAARBRUECKEN = "Saarbruecken"
+        private const val KARLSRUHE = "Karlsruhe"
         private const val FRANKFURT = "Frankfurt"
+        private const val LUDWIGSHAFEN = "Ludwigshafen"
 
-        private val berlin = Place(
-            name = BERLIN,
+        private val saarbruecken = Place(
+            name = SAARBRUECKEN,
             location = Location(longitude = 13.404954, latitude = 52.520008),
             partners = mapOf(
-                BRAUNSCHWEIG to 191.0,
-                FRANKFURT to 419.0
+                KAISERSLAUTERN to 70.0,
+                KARLSRUHE to 145.0
             )
         )
 
-        private val braunschweig = Place(
-            name = BRAUNSCHWEIG,
+        private val kaiserslautern = Place(
+            name = KAISERSLAUTERN,
             location = Location(longitude = 10.516667, latitude = 52.266666),
             partners = mapOf(
-                BERLIN to 191.0,
-                FRANKFURT to 270.57
+                SAARBRUECKEN to 70.0,
+                FRANKFURT to 103.0,
+                LUDWIGSHAFEN to 53.0
             )
         )
 
@@ -83,13 +81,12 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
             name = FRANKFURT,
             location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
-                BERLIN to 419.0,
-                BRAUNSCHWEIG to 270.57
+                KAISERSLAUTERN to 103.0,
             )
         )
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
-            Arguments.of(setOf(berlin, braunschweig, frankfurt))
+            Arguments.of(setOf(saarbruecken, kaiserslautern, frankfurt))
         )
     }
 }
