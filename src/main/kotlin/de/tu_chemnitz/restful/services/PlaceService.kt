@@ -7,7 +7,7 @@ import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceEntity
 import de.tu_chemnitz.restful.repositories.PlaceRepository
-import java.util.*
+import java.util.PriorityQueue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
