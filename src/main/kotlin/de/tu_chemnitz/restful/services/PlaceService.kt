@@ -18,6 +18,9 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
         Place.fromEntity(it)
     }
 
+    fun getMany(offset: Int, limit: Int): List<Place> =
+        placeRepository.findAll().map(Place.Companion::fromEntity)
+
     fun createMany(places: List<Place>): Iterable<PlaceEntity> = placeRepository.saveAll(places.map { place ->
         place.createPartners()
         save(place)
@@ -73,6 +76,7 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
         )
     )
 
+    // needs some refactoring again
     private fun aStar(start: String, destination: String, heuristics: Map<Place, Distance>): Path {
         val simplifiedHeuristics = heuristics.map { it.key.name to it.value }.toMap()
         val open = PriorityQueue<Node>(compareBy { it.f }).also {
@@ -90,18 +94,27 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
             val heuristic = checkNotNull(heuristics.keys.find { it.name == currentNode.name }) {
                 "There should be a heuristic for ${currentNode.name}"
             }
-            val newNodes = heuristic.partners.map { (place, distance) ->
+            val newNodes = heuristic.partners.asSequence().filter { partner ->
+                partner.key !in closed.map { it.name }
+            }.map { (place, distance) ->
                 val h = simplifiedHeuristics.getValue(place)
                 Node(
                     name = place,
-                    g = (currentNode.parent?.g ?: 0.0) + distance,
+                    g = currentNode.g + distance,
                     f = currentNode.g + distance + h,
                     h = h,
                     parent = currentNode
                 )
             }
 
-            newNodes.forEach(open::add)
+            // needs optimization
+            newNodes.filter { newNode -> open.containsHigherFValueOf(newNode) || open.none { it.name == newNode.name } }
+                .forEach { node ->
+                    open.removeAll { it.name == node.name }
+                    open += node
+                }
+
+            open -= currentNode
             closed += currentNode
         }
 
@@ -110,10 +123,14 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
     }
 
     private fun getResultPath(closed: Set<Node>, destination: String): Pair<List<String>, Distance> {
-        val path = generateSequence(closed.first { it.name == destination }) { it.parent }
+        val destinationNode = closed.first { it.name == destination }
+        val path = generateSequence(destinationNode) { it.parent }
             .toList()
             .asReversed()
 
-        return path.map { it.name } to path.sumOf { it.g }
+        return path.map { it.name } to destinationNode.g
     }
+
+    private fun PriorityQueue<Node>.containsHigherFValueOf(node: Node): Boolean =
+        find { it.name == node.name }?.let { it.f > node.f } ?: false
 }

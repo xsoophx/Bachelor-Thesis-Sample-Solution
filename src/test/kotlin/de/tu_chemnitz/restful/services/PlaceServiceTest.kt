@@ -36,17 +36,19 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             KAISERSLAUTERN to 158.0,
             KARLSRUHE to 140.0,
             LUDWIGSHAFEN to 108.0,
-            FRANKFURT to 96.0
+            FRANKFURT to 96.0,
+            HEILBRONN to 87.0,
+            WUERZBURG to 0.0
         )
 
         val actual = placeService.getShortestDistance(
             start = saarbruecken.name,
-            destination = frankfurt.name,
+            destination = wuerzburg.name,
             heuristics = heuristics
         )
 
         assertEquals(
-            expected = Path(listOf(SAARBRUECKEN, KAISERSLAUTERN, FRANKFURT), distance = 173.0),
+            expected = Path(listOf(SAARBRUECKEN, KAISERSLAUTERN, FRANKFURT, WUERZBURG), distance = 289.0),
             actual = actual
         )
     }
@@ -57,6 +59,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
         private const val KARLSRUHE = "Karlsruhe"
         private const val FRANKFURT = "Frankfurt"
         private const val LUDWIGSHAFEN = "Ludwigshafen"
+        private const val HEILBRONN = "Heilbronn"
+        private const val WUERZBURG = "Wuerzburg"
 
         private val saarbruecken = Place(
             name = SAARBRUECKEN,
@@ -82,11 +86,50 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
                 KAISERSLAUTERN to 103.0,
+                WUERZBURG to 116.0
             )
         )
 
+        private val wuerzburg = Place(
+            name = WUERZBURG,
+            location = Location(longitude = 8.682127, latitude = 50.110924),
+            partners = mapOf(
+                FRANKFURT to 116.0,
+                LUDWIGSHAFEN to 183.0,
+                HEILBRONN to 102.0
+            )
+        )
+
+        private val ludwigshafen = Place(
+            name = LUDWIGSHAFEN,
+            location = Location(longitude = 8.682127, latitude = 50.110924),
+            partners = mapOf(
+                KAISERSLAUTERN to 53.0,
+                WUERZBURG to 183.0
+            )
+        )
+
+        private val karlsruhe = Place(
+            name = KARLSRUHE,
+            location = Location(longitude = 8.682127, latitude = 50.110924),
+            partners = mapOf(
+                SAARBRUECKEN to 145.0,
+                HEILBRONN to 84.0
+            )
+        )
+
+        val heilbronn = Place(
+            name = HEILBRONN,
+            location = Location(longitude = 8.682127, latitude = 50.110924),
+            partners = mapOf(
+                WUERZBURG to 102.0,
+                KARLSRUHE to 84.0
+            )
+        )
+
+
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
-            Arguments.of(setOf(saarbruecken, kaiserslautern, frankfurt))
+            Arguments.of(setOf(saarbruecken, kaiserslautern, frankfurt, ludwigshafen, karlsruhe, heilbronn, wuerzburg))
         )
     }
 }

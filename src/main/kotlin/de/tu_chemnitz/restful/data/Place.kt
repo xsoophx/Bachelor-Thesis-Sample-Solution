@@ -8,6 +8,7 @@ data class Location(
 )
 
 typealias Distance = Double
+typealias Partners = Map<String, Distance>
 
 data class Place(
     val name: String,
@@ -31,14 +32,16 @@ data class PlaceEntity(
     val location: Location,
     val partners: Map<String, Distance>,
 ) {
-    fun toResponse() = PlaceResponse(partners = partners)
+    fun toResponse() = PlaceResponse(name = name, partners = partners)
 }
 
 data class PlaceResponse(
-    val partners: Map<String, Distance>
+    val name: String,
+    val partners: Partners
 ) {
     companion object {
-        fun fromPlace(place: Place) = PlaceResponse(partners = place.partners)
-        fun fromEntity(placeEntity: PlaceEntity) = PlaceResponse(partners = placeEntity.partners)
+        fun fromPlace(place: Place) = PlaceResponse(name = place.name, partners = place.partners)
+        fun fromEntity(placeEntity: PlaceEntity) =
+            PlaceResponse(name = placeEntity.name, partners = placeEntity.partners)
     }
 }

@@ -1,10 +1,10 @@
-package de.tu_chemnitz.restful.services
+package de.tu_chemnitz.restful.controllers
 
 import com.ninjasquad.springmockk.MockkBean
-import de.tu_chemnitz.restful.controllers.PlaceController
 import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceResponse
+import de.tu_chemnitz.restful.services.PlaceService
 import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.confirmVerified

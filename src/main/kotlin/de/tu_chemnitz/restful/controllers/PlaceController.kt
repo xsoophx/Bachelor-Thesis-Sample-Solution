@@ -31,11 +31,17 @@ class PlaceController @Autowired constructor(val placeService: PlaceService) {
             ?.let { ResponseEntity.ok(PlaceResponse.fromPlace(it)) }
             ?: ResponseEntity.notFound().build()
 
+    // optionally some paging (+sorting) can be added
+    @GetMapping(produces = ["application/json"])
+    fun getPlaces(
+        @RequestParam(required = false, defaultValue = DEFAULT_OFFSET) offset: Int,
+        @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int
+    ): List<PlaceResponse> = placeService.getMany(offset, limit).map(PlaceResponse.Companion::fromPlace)
 
     @PostMapping(produces = ["application/json"])
     fun createPlaces(@RequestBody places: List<Place>): ResponseEntity<List<PlaceResponse>> {
         val entity = placeService.createMany(places)
-        return ResponseEntity.ok().body(entity.map { PlaceResponse.fromEntity(it) })
+        return ResponseEntity.ok().body(entity.map(PlaceResponse.Companion::fromEntity))
     }
 
     @PostMapping("/distance", produces = ["application/json"])
@@ -56,5 +62,10 @@ class PlaceController @Autowired constructor(val placeService: PlaceService) {
             response.status = SC_OK
         else
             response.status = SC_NOT_FOUND
+    }
+
+    companion object {
+        private const val DEFAULT_OFFSET = "0"
+        private const val DEFAULT_LIMIT = "10"
     }
 }
