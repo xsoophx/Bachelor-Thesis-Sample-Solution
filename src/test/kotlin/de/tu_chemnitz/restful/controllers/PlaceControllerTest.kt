@@ -1,7 +1,6 @@
 package de.tu_chemnitz.restful.controllers
 
 import com.ninjasquad.springmockk.MockkBean
-import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceResponse
 import de.tu_chemnitz.restful.services.PlaceService
@@ -73,7 +72,6 @@ class PlaceControllerTest @Autowired constructor(private val controller: PlaceCo
     companion object Provider : ArgumentsProvider {
         private val place = Place(
             name = "Umpalumpadorf",
-            location = Location(longitude = 12.916667, latitude = 50.833332),
             partners = mapOf()
         )
 

@@ -1,7 +1,6 @@
 package de.tu_chemnitz.restful.services
 
 import de.tu_chemnitz.restful.data.Distance
-import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Node
 import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
@@ -71,7 +70,6 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
     private fun save(name: String, partner: String, distance: Distance) = placeRepository.save(
         PlaceEntity(
             name = name,
-            location = Location(0.0, 0.0),
             partners = mapOf(partner to distance)
         )
     )

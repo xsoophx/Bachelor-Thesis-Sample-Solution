@@ -1,6 +1,5 @@
 package de.tu_chemnitz.restful.services
 
-import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import java.util.stream.Stream
@@ -64,7 +63,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         private val saarbruecken = Place(
             name = SAARBRUECKEN,
-            location = Location(longitude = 13.404954, latitude = 52.520008),
             partners = mapOf(
                 KAISERSLAUTERN to 70.0,
                 KARLSRUHE to 145.0
@@ -73,7 +71,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         private val kaiserslautern = Place(
             name = KAISERSLAUTERN,
-            location = Location(longitude = 10.516667, latitude = 52.266666),
             partners = mapOf(
                 SAARBRUECKEN to 70.0,
                 FRANKFURT to 103.0,
@@ -83,7 +80,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         private val frankfurt = Place(
             name = FRANKFURT,
-            location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
                 KAISERSLAUTERN to 103.0,
                 WUERZBURG to 116.0
@@ -92,7 +88,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         private val wuerzburg = Place(
             name = WUERZBURG,
-            location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
                 FRANKFURT to 116.0,
                 LUDWIGSHAFEN to 183.0,
@@ -102,7 +97,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         private val ludwigshafen = Place(
             name = LUDWIGSHAFEN,
-            location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
                 KAISERSLAUTERN to 53.0,
                 WUERZBURG to 183.0
@@ -111,7 +105,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         private val karlsruhe = Place(
             name = KARLSRUHE,
-            location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
                 SAARBRUECKEN to 145.0,
                 HEILBRONN to 84.0
@@ -120,7 +113,6 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
         val heilbronn = Place(
             name = HEILBRONN,
-            location = Location(longitude = 8.682127, latitude = 50.110924),
             partners = mapOf(
                 WUERZBURG to 102.0,
                 KARLSRUHE to 84.0
