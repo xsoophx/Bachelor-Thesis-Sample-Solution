@@ -4,7 +4,7 @@ import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import java.util.stream.Stream
 import kotlin.test.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest
 class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
-    @BeforeEach
+    @AfterEach
     fun cleanUp() {
         placeService.deleteAll()
     }
@@ -119,8 +119,7 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             )
         )
 
-
-        override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
+        override fun provideArguments(context: ExtensionContext?): Stream<Arguments> = Stream.of(
             Arguments.of(setOf(saarbruecken, kaiserslautern, frankfurt, ludwigshafen, karlsruhe, heilbronn, wuerzburg))
         )
     }

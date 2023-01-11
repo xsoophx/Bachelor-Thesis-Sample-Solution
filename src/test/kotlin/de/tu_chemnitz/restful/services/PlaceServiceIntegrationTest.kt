@@ -83,7 +83,7 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
             )
         )
 
-        override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
+        override fun provideArguments(context: ExtensionContext?): Stream<Arguments> = Stream.of(
             Arguments.of(setOf(berlin, braunschweig, frankfurt))
         )
     }

@@ -55,7 +55,7 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
 
     private fun findAllByPartners(name: String) = placeRepository.findByPartnersExists(name)
 
-    private fun save(place: Place) = placeRepository.save(place.toEntity())
+    private fun save(place: Place) = save(place.toEntity())
 
     private fun save(placeEntity: PlaceEntity) = placeRepository.save(placeEntity)
 
@@ -77,8 +77,8 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
     // needs some refactoring again
     private fun aStar(start: String, destination: String, heuristics: Map<Place, Distance>): Path {
         val simplifiedHeuristics = heuristics.map { it.key.name to it.value }.toMap()
-        val open = PriorityQueue<Node>(compareBy { it.f }).also {
-            it.add(Node(name = start, f = 0.0, g = 0.0, h = 0.0, parent = null))
+        val open = PriorityQueue<Node>(compareBy { it.f }).apply {
+            add(Node(name = start, f = 0.0, g = 0.0, h = 0.0, parent = null))
         }
         val closed = mutableSetOf<Node>()
 

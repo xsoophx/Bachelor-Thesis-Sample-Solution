@@ -15,6 +15,7 @@ build/
 out/
 
 # task resources
+src/main/resources/client/Heuristics.json
 src/main/resources/client/Place.json
 src/main/resources/client/Places.json
 src/main/resources/server/Places.json
