@@ -1,12 +1,16 @@
 package de.tu_chemnitz.restful.services
 
 import de.tu_chemnitz.restful.data.Distance
+import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Node
 import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceEntity
 import de.tu_chemnitz.restful.repositories.PlaceRepository
-import java.util.PriorityQueue
+import java.util.*
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -70,9 +74,27 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
     private fun save(name: String, partner: String, distance: Distance) = placeRepository.save(
         PlaceEntity(
             name = name,
-            partners = mapOf(partner to distance)
+            partners = mapOf(partner to distance),
+            location = null
         )
     )
+
+    private fun createHeuristics(destination: String): Map<String, Distance> {
+        val destinationNode = checkNotNull(this[destination]) { "No place with the name $destination found." }
+        checkNotNull(destinationNode.location) { "Destination Node Location was not entered yet." }
+
+        val places = findAll().asSequence().map(Place.Companion::fromEntity)
+        return places.mapNotNull { place ->
+            place.location?.let { place.name to getDistance(it, destinationNode.location) }
+        }.toMap()
+    }
+
+    private fun getDistance(a: Location, b: Location): Double {
+        val xDistance = abs(a.x - b.x)
+        val yDistance = abs(a.y - b.y)
+
+        return sqrt(xDistance.pow(2) + yDistance.pow(2))
+    }
 
     // needs some refactoring again
     private fun aStar(start: String, destination: String, heuristics: Map<Place, Distance>): Path {
