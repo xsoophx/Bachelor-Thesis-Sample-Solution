@@ -1,6 +1,7 @@
 package de.tu_chemnitz.restful.controllers
 
 import com.ninjasquad.springmockk.MockkBean
+import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Place
 import de.tu_chemnitz.restful.data.PlaceResponse
 import de.tu_chemnitz.restful.services.PlaceService
@@ -72,7 +73,8 @@ class PlaceControllerTest @Autowired constructor(private val controller: PlaceCo
     companion object Provider : ArgumentsProvider {
         private val place = Place(
             name = "Umpalumpadorf",
-            partners = mapOf()
+            partners = mapOf(),
+            location = Location(0.0, 0.0)
         )
 
         override fun provideArguments(context: ExtensionContext): Stream<out Arguments> = Stream.of(

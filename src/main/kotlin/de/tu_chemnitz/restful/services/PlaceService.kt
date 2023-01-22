@@ -43,8 +43,20 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
         } else false
     }
 
+    private fun checkNodeExistence(start: String, destination: String) {
+        checkNotNull(this[start]) { "No place with the name $destination found." }
+        checkNotNull(this[destination]) { "No place with the name $destination found." }
+    }
+
+    fun getShortestDistance(start: String, destination: String): Path {
+        checkNodeExistence(start, destination)
+        val heuristics = createHeuristics(destination)
+
+        return aStar(start, destination, heuristics)
+    }
+
     fun getShortestDistance(start: String, destination: String, heuristics: Map<String, Distance>): Path? {
-        if (this[start] == null || this[destination] == null) return null
+        checkNodeExistence(start, destination)
 
         val places = findAll()
         if (places.any { it.name !in heuristics.keys }) return null
@@ -79,13 +91,13 @@ class PlaceService @Autowired constructor(val placeRepository: PlaceRepository) 
         )
     )
 
-    private fun createHeuristics(destination: String): Map<String, Distance> {
+    private fun createHeuristics(destination: String): Map<Place, Distance> {
         val destinationNode = checkNotNull(this[destination]) { "No place with the name $destination found." }
         checkNotNull(destinationNode.location) { "Destination Node Location was not entered yet." }
 
         val places = findAll().asSequence().map(Place.Companion::fromEntity)
         return places.mapNotNull { place ->
-            place.location?.let { place.name to getDistance(it, destinationNode.location) }
+            place.location?.let { place to getDistance(it, destinationNode.location) }
         }.toMap()
     }
 

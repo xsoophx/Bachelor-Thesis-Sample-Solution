@@ -1,5 +1,6 @@
 package de.tu_chemnitz.restful.services
 
+import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Path
 import de.tu_chemnitz.restful.data.Place
 import java.util.stream.Stream
@@ -28,7 +29,7 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
 
     @ParameterizedTest
     @ArgumentsSource(PlaceProvider::class)
-    fun `aStar should work correctly`(places: Set<Place>) {
+    fun `aStar should work correctly with given heuristics`(places: Set<Place>) {
         placeService.createMany(places.toList())
         val heuristics = mapOf(
             SAARBRUECKEN to 222.0,
@@ -52,6 +53,22 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
         )
     }
 
+    @ParameterizedTest
+    @ArgumentsSource(PlaceProvider::class)
+    fun `aStar should work correctly when creating heuristics`(places: Set<Place>) {
+        placeService.createMany(places.toList())
+
+        val actual = placeService.getShortestDistance(
+            start = saarbruecken.name,
+            destination = wuerzburg.name
+        )
+
+        assertEquals(
+            expected = Path(listOf(SAARBRUECKEN, KAISERSLAUTERN, FRANKFURT, WUERZBURG), distance = 289.0),
+            actual = actual
+        )
+    }
+
     companion object PlaceProvider : ArgumentsProvider {
         private const val KAISERSLAUTERN = "Kaiserslautern"
         private const val SAARBRUECKEN = "Saarbruecken"
@@ -66,7 +83,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             partners = mapOf(
                 KAISERSLAUTERN to 70.0,
                 KARLSRUHE to 145.0
-            )
+            ),
+            location = Location(x = 200.0, 96.35351576)
         )
 
         private val kaiserslautern = Place(
@@ -75,7 +93,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
                 SAARBRUECKEN to 70.0,
                 FRANKFURT to 103.0,
                 LUDWIGSHAFEN to 53.0
-            )
+            ),
+            location = Location(x = 150.0, 49.63869458)
         )
 
         private val frankfurt = Place(
@@ -83,7 +102,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             partners = mapOf(
                 KAISERSLAUTERN to 103.0,
                 WUERZBURG to 116.0
-            )
+            ),
+            location = Location(x = 96.0, 0.0)
         )
 
         private val wuerzburg = Place(
@@ -92,7 +112,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
                 FRANKFURT to 116.0,
                 LUDWIGSHAFEN to 183.0,
                 HEILBRONN to 102.0
-            )
+            ),
+            location = Location(x = 0.0, 0.0)
         )
 
         private val ludwigshafen = Place(
@@ -100,7 +121,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             partners = mapOf(
                 KAISERSLAUTERN to 53.0,
                 WUERZBURG to 183.0
-            )
+            ),
+            location = Location(x = 85.0, 66.62582082)
         )
 
         private val karlsruhe = Place(
@@ -108,7 +130,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             partners = mapOf(
                 SAARBRUECKEN to 145.0,
                 HEILBRONN to 84.0
-            )
+            ),
+            location = Location(x = 100.0, 97.97958971)
         )
 
         val heilbronn = Place(
@@ -116,7 +139,8 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             partners = mapOf(
                 WUERZBURG to 102.0,
                 KARLSRUHE to 84.0
-            )
+            ),
+            location = Location(x = 0.0, 87.0)
         )
 
         override fun provideArguments(context: ExtensionContext?): Stream<Arguments> = Stream.of(

@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Kaiserslautern",
+    "partners": {
+      "Saarbrücken": 70,
+      "Frankfurt": 103,
+      "Ludwigshafen": 53
+    },
+    "location": {
+      "x": 150,
+      "y": 49.63869458
+    }
+  },
+  {
+    "name": "Karlsruhe",
+    "partners": {
+      "Saarbrücken": 145,
+      "Heilbronn": 103
+    },
+    "location": {
+      "x": 100,
+      "y": 97.97958971
+    }
+  },
+  {
+    "name": "Saarbrücken",
+    "partners": {
+      "Kaiserslautern": 70,
+      "Karlsruhe": 103
+    },
+    "location": {
+      "x": 200,
+      "y": 96.35351576
+    }
+  },
+  {
+    "name": "Karlsruhe",
+    "partners": {
+      "Saarbrücken": 145,
+      "Heilbronn": 84
+    },
+    "location": {
+      "x": 150,
+      "y": 49.63869458
+    }
+  },
+  {
+    "name": "Ludwigshafen",
+    "partners": {
+      "Kaiserslautern": 53,
+      "Würzburg": 84
+    },
+    "location": {
+      "x": 85,
+      "y": 66.62582082
+    }
+  },
+  {
+    "name": "Frankfurt",
+    "partners": {
+      "Kaiserslautern": 103,
+      "Würzburg": 116
+    },
+    "location": {
+      "x": 96,
+      "y": 0
+    }
+  },
+  {
+    "name": "Würzburg",
+    "partners": {
+      "Frankfurt": 116,
+      "Ludwigshafen": 183,
+      "Heilbronn": 102
+    },
+    "location": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "name": "Heilbronn",
+    "partners": {
+      "Karlsruhe": 84,
+      "Würzburg": 102
+    },
+    "location": {
+      "x": 0,
+      "y": 87
+    }
+  }
+]

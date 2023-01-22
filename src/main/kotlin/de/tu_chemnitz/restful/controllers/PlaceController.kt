@@ -44,17 +44,28 @@ class PlaceController @Autowired constructor(val placeService: PlaceService) {
         return ResponseEntity.ok().body(entity.map(PlaceResponse.Companion::fromEntity))
     }
 
-    @PostMapping("/distance", produces = ["application/json"])
+    @PostMapping("/distance/heuristic", produces = ["application/json"])
     @ResponseBody
-    fun getDistance(
+    fun getDistanceByHeuristic(
         @RequestParam("start") start: String,
         @RequestParam("destination") destination: String,
         @RequestBody heuristics: Map<String, Distance>
     ): ResponseEntity<PathResponse> {
         val entity = placeService.getShortestDistance(start, destination, heuristics)
-        return entity?.let { ResponseEntity.ok(PathResponse.fromPath(entity)) }
+        return entity?.let { ResponseEntity.ok(PathResponse.fromPath(it)) }
             ?: ResponseEntity.badRequest().build()
     }
+
+    @PostMapping("/distance", produces = ["application/json"])
+    @ResponseBody
+    fun getDistance(
+        @RequestParam("start") start: String,
+        @RequestParam("destination") destination: String
+    ): ResponseEntity<PathResponse> {
+        val entity = placeService.getShortestDistance(start, destination)
+        return ResponseEntity.ok(PathResponse.fromPath(entity))
+    }
+
 
     @DeleteMapping("/{name}")
     fun deletePlace(@PathVariable("name") name: String, response: HttpServletResponse) {

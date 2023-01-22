@@ -31,7 +31,7 @@ data class PlaceEntity(
     val partners: Map<String, Distance>,
     val location: LocationEntity?
 ) {
-    fun toResponse() = PlaceResponse(name = name, partners = partners)
+    fun toResponse() = PlaceResponse(name = name, partners = partners, location?.let { Location(it.x, it.y) })
 }
 
 data class Location(
@@ -44,13 +44,22 @@ data class LocationEntity(
     val y: Double
 )
 
+// could create LocationResponse
 data class PlaceResponse(
     val name: String,
-    val partners: Partners
+    val partners: Partners,
+    val location: Location?
 ) {
     companion object {
-        fun fromPlace(place: Place) = PlaceResponse(name = place.name, partners = place.partners)
+        fun fromPlace(place: Place) = PlaceResponse(
+            name = place.name,
+            partners = place.partners,
+            location = place.location?.let { Location(it.x, it.y) })
+
         fun fromEntity(placeEntity: PlaceEntity) =
-            PlaceResponse(name = placeEntity.name, partners = placeEntity.partners)
+            PlaceResponse(
+                name = placeEntity.name,
+                partners = placeEntity.partners,
+                location = placeEntity.location?.let { Location(it.x, it.y) })
     }
 }

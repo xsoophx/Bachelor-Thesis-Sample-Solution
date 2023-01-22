@@ -1,5 +1,6 @@
 package de.tu_chemnitz.restful.services
 
+import de.tu_chemnitz.restful.data.Location
 import de.tu_chemnitz.restful.data.Place
 import java.util.stream.Stream
 import kotlin.test.assertEquals
@@ -38,7 +39,8 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
     fun `should delete place from partner list`(places: Set<Place>) {
         val toBeRemoved = Place(
             name = "Umpalumpadorf",
-            partners = mapOf(FRANKFURT to 1.0, BERLIN to 1.0, BRAUNSCHWEIG to 1.0)
+            partners = mapOf(FRANKFURT to 1.0, BERLIN to 1.0, BRAUNSCHWEIG to 1.0),
+            location = Location(0.0, 1.0)
         )
 
         placeService.createMany(places.addPartner(toBeRemoved.name) + toBeRemoved)
@@ -64,7 +66,8 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
             partners = mapOf(
                 BRAUNSCHWEIG to 191.0,
                 FRANKFURT to 419.0
-            )
+            ),
+            location = Location(0.0, 1.0)
         )
 
         private val braunschweig = Place(
@@ -72,7 +75,8 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
             partners = mapOf(
                 BERLIN to 191.0,
                 FRANKFURT to 270.57
-            )
+            ),
+            location = Location(0.0, 1.0)
         )
 
         private val frankfurt = Place(
@@ -80,7 +84,8 @@ class PlaceServiceIntegrationTest @Autowired constructor(val placeService: Place
             partners = mapOf(
                 BERLIN to 419.0,
                 BRAUNSCHWEIG to 270.57
-            )
+            ),
+            location = Location(0.0, 1.0)
         )
 
         override fun provideArguments(context: ExtensionContext?): Stream<Arguments> = Stream.of(
