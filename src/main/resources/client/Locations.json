@@ -12,21 +12,10 @@
     }
   },
   {
-    "name": "Karlsruhe",
-    "partners": {
-      "Saarbrücken": 145,
-      "Heilbronn": 103
-    },
-    "location": {
-      "x": 100,
-      "y": 97.97958971
-    }
-  },
-  {
     "name": "Saarbrücken",
     "partners": {
       "Kaiserslautern": 70,
-      "Karlsruhe": 103
+      "Karlsruhe": 145
     },
     "location": {
       "x": 200,
@@ -40,15 +29,15 @@
       "Heilbronn": 84
     },
     "location": {
-      "x": 150,
-      "y": 49.63869458
+      "x": 100,
+      "y": 97.97958971
     }
   },
   {
     "name": "Ludwigshafen",
     "partners": {
       "Kaiserslautern": 53,
-      "Würzburg": 84
+      "Würzburg": 183
     },
     "location": {
       "x": 85,
