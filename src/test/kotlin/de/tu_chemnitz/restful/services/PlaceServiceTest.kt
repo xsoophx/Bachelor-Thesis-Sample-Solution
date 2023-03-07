@@ -134,7 +134,7 @@ class PlaceServiceTest @Autowired constructor(val placeService: PlaceService) {
             location = Location(x = 100.0, 97.97958971)
         )
 
-        val heilbronn = Place(
+        private val heilbronn = Place(
             name = HEILBRONN,
             partners = mapOf(
                 WUERZBURG to 102.0,
